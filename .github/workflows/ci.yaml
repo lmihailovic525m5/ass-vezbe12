@@ -21,7 +21,7 @@ jobs:
                   dotnet-version: 8.0.x
             - run: dotnet restore
             - run: dotnet build --no-restore
-            - run: dotnet test --filter "Category=Unit" \p:CollectCoverageTrue \p:Threshold=60 \p:ThresholdType=line \p:ThresholdStat
+            - run: dotnet test --filter "Category=Unit" /p:CollectCoverageTrue /p:Threshold=60 /p:ThresholdType=line /p:ThresholdStat=total
     integration-tests:
          runs-on: windows-latest
          needs: unit-tests
