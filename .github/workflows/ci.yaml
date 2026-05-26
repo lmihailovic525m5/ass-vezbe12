@@ -13,7 +13,7 @@ jobs:
                 - run: dotnet restore
                 - run: dotnet build --no-restore
     unit-tests:
-        runs-on: ubuntu-latest
+        runs-on: windows-latest
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-dotnet@v4
@@ -23,7 +23,7 @@ jobs:
             - run: dotnet build --no-restore
             - run: dotnet test --filter "Category=Unit"
     integration-tests:
-         runs-on: ubuntu-latest
+         runs-on: windows-latest
          needs: unit-tests
          steps:
              - uses: actions/checkout@v4
@@ -33,3 +33,17 @@ jobs:
              - run: dotnet restore
              - run: dotnet build --no-restore
              - run: dotnet test --filter "Category=Integration"
+    publish-artifact:
+         runs-on: windows-latest
+         needs: integration-tests
+         steps:
+             - uses: actions/checkout@v4
+             - uses: actions/setup-dotnet@v4
+               with: 
+                   dotnet-version: 8.0.x
+             - run: dotnet restore
+             - run: dotnet publish OrderSystem.UI/OrderSystem.UI.csproj -c Release -o publish-output
+             - uses: actions/upload-artifact@v4
+               with:
+                  name: OrderSystem-WPF-App
+                  path: publish-output
